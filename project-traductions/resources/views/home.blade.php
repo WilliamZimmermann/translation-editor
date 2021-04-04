@@ -22,19 +22,26 @@
         <form class="row g-3" method="POST" action="{{ route('file.upload') }}" enctype="multipart/form-data">
             {{csrf_field()}}
             <div class="col-12">
-                <label class="form-label">Original language</label>
-                <input type="text" name="originalLanguage" id="originalLanguage" class="form-control">
+                <label class="form-label">Original Files Type</label>
+                <select name="fileType" class="form-control">
+                    <option value="JSON">JSON</option>
+                    <option value="laravel7" selected>PHP - Laravel 7</option>
+                </select>
             </div>
             <div class="col-12">
                 <label class="form-label">Upload one or more files</label>
                 <input type="file" name="filesToUpload[]" id="filesToUpload[]" class="form-control" multiple>
             </div>
             <div class="col-12">
+                <label class="form-label">Would you like to unify your translation keys when possible? If this option is selected, any duplicate keys with the same translation will be unified. Any duplicate keys with different translations will be maintained but with different key names.</label>
+                <input type="checkbox" name="unify" id="unify">
+            </div>
+            <div class="col-12">
                 <button type="submit" class="btn btn-primary">Send File</button>
             </div>
         </form>
         @if(session()->get('content'))
-            <label class="form-label">Unifed Extracted JSON File</label>
+            <label class="form-label">Extracted JSON File</label>
             <textarea name="fileExtractedStrings" class="form-control">{{ session()->get('content') }}</textarea>
         @endif
     </body>
