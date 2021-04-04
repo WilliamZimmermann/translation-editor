@@ -20,14 +20,14 @@
             </div>
         @endif
         <form class="row g-3" method="POST" action="{{ route('file.upload') }}" enctype="multipart/form-data">
-            @csrf
+            {{csrf_field()}}
             <div class="col-12">
                 <label class="form-label">Original language</label>
                 <input type="text" name="originalLanguage" id="originalLanguage" class="form-control">
             </div>
             <div class="col-12">
                 <label class="form-label">Upload one or more files</label>
-                <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
+                <input type="file" name="filesToUpload[]" id="filesToUpload[]" class="form-control" multiple>
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Send File</button>

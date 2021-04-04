@@ -13,40 +13,33 @@ class FileController extends Controller
      */
     public function checkFile(Request $request){
         $originalLanguage = $request->input('originalLanguage');
-        $uploadedFile = $request->file('fileToUpload');
-        $extractionResult = $this->extractTranslations($uploadedFile);
-        //dd($uploadedFile);
 
-        // $fileName = time().$uploadedFile->getClientOriginalName();
-        // $fileExtension = time().$uploadedFile->getClientOriginalExtension();
-        // $fileContent = time().$uploadedFile->getContent();
-
-        //die();
-        return back()->with('message', $extractionResult["message"])->with('content', $extractionResult["content"]);
+        if($request->hasFile('filesToUpload')){
+            $extractionResult = [];
+            foreach($request->file('filesToUpload') as $file)
+            {
+                $extractionResult[] = $this->extractTranslations($file);
+            }
+            return back()->with('message', "Some message")->with('content', json_encode($extractionResult));
+        }else{
+            return back()->with('message', "No files were uploaded!");
+        }
     }
 
     private function extractTranslations($file){
         switch(strtolower($file->getClientOriginalExtension())){
             case "json":
-                return [
-                    "content" => "nothing",
-                    "message" => "It's a json file"
-                ];
+                return "";
             case "php":
-                return [
-                    "content" => json_encode($this->extractPHPKeyAndTranslation($file)),
-                    "message" => "It's a php file"
-                ];
+                return $this->extractPHPKeyAndTranslation($file);
             default:
-                return [
-                    "content" => "",
-                    "message" => "File not supported"
-                ];
+                return "";
         }
     }
 
     /**
-     * This function will extract all 
+     * This function will extract all PHP keys and values (translations)
+     * and return a combined Array
      */
     private function extractPHPKeyAndTranslation($file){
         $translationKeys = [];
@@ -59,7 +52,7 @@ class FileController extends Controller
                 $translationContent[] = $this->get_string_between($line, "' => '", "'");
             }
         }
-        return ["translationKeys" => $translationKeys, "translationContent"=> $translationContent];
+        return array_combine($translationKeys, $translationContent);
     }
 
     /**
