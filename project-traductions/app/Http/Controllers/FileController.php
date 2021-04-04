@@ -111,7 +111,7 @@ class FileController extends Controller
         
         ksort($unique_array);
 
-        unset($extractionResult[0]["willYaplaFileName"]);
+        unset($unique_array["willYaplaFileName"]);
         
         return $unique_array;
     }
