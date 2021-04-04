@@ -22,8 +22,11 @@
         <form class="row g-3" method="POST" action="{{ route('file.upload') }}" enctype="multipart/form-data">
             {{csrf_field()}}
             <div class="col-12">
-                <label class="form-label">Original language</label>
-                <input type="text" name="originalLanguage" id="originalLanguage" class="form-control">
+                <label class="form-label">Original Files Type</label>
+                <select name="fileType" class="form-control">
+                    <option value="JSON">JSON</option>
+                    <option value="laravel7" selected>PHP - Laravel 7</option>
+                </select>
             </div>
             <div class="col-12">
                 <label class="form-label">Upload one or more files</label>
