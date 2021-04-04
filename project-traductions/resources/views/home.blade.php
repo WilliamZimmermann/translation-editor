@@ -30,11 +30,15 @@
                 <input type="file" name="filesToUpload[]" id="filesToUpload[]" class="form-control" multiple>
             </div>
             <div class="col-12">
+                <label class="form-label">Would you like to unify your translation keys when possible?</label>
+                <input type="checkbox" name="unify" id="unify">
+            </div>
+            <div class="col-12">
                 <button type="submit" class="btn btn-primary">Send File</button>
             </div>
         </form>
         @if(session()->get('content'))
-            <label class="form-label">Unifed Extracted JSON File</label>
+            <label class="form-label">Extracted JSON File</label>
             <textarea name="fileExtractedStrings" class="form-control">{{ session()->get('content') }}</textarea>
         @endif
     </body>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Http\UploadedFile;
 
 class FileController extends Controller
 {
@@ -41,7 +41,7 @@ class FileController extends Controller
      * This function will extract all PHP keys and values (translations)
      * and return a combined Array
      */
-    private function extractPHPKeyAndTranslation($file){
+    private function extractPHPKeyAndTranslation(UploadedFile $file){
         $translationKeys = [];
         $translationContent = [];
         foreach(file($file) as $line) {
@@ -52,7 +52,9 @@ class FileController extends Controller
                 $translationContent[] = $this->get_string_between($line, "' => '", "'");
             }
         }
-        return array_combine($translationKeys, $translationContent);
+        $arrayCombination = array_combine($translationKeys, $translationContent);
+        $finalArray = [explode('.', $file->getClientOriginalName())[0] => $arrayCombination];
+        return $finalArray;
     }
 
     /**
@@ -66,6 +68,10 @@ class FileController extends Controller
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
         return substr($string, $ini, $len);
+    }
+
+    private function unifyKeys($content){
+
     }
 
 }
