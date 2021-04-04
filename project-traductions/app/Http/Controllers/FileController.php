@@ -16,17 +16,17 @@ class FileController extends Controller
 
         if($request->hasFile('filesToUpload')){
             $extractionResult = [];
-            if(!$request->input('unify')){
-                foreach($request->file('filesToUpload') as $file)
-                {
-                    // We want that each node of translations has his own name/key. This key will be the original file name
-                    $extractionResult[] = [explode('.', $file->getClientOriginalName())[0] => $this->extractTranslations($file, $request->input('fileType'))];
-                }
-            }else{
-                $extractionResult = $this->unifyArraysKeys($request->file('filesToUpload'), $request->input('fileType'));
-                dd($extractionResult);
+            foreach($request->file('filesToUpload') as $file)
+            {
+                // We want that each node of translations has his own name/key. This key will be the original file name
+                $fileName = explode('.', $file->getClientOriginalName())[0];
+                $extractedTranslations = $this->extractTranslations($file, $request->input('fileType'));
+                $extractionResult[] = array_merge($extractedTranslations, ["willYaplaFileName"=>$fileName]);
             }
-            
+            if($request->input('unify')){
+                $extractionResult = $this->unifyArraysKeys($extractionResult, );
+            }
+
             return back()->with('message', "Some message")->with('content', json_encode($extractionResult));
         }else{
             return back()->with('message', "No files were uploaded!");
@@ -85,20 +85,21 @@ class FileController extends Controller
      * This function will unify arrays keys when it is possible
      * When keys are equal but values are different, it will create two different keys based on file name
      */
-    private function unifyArraysKeys($files, $fileType){
-        foreach($files as $file)
-        {
-            $extractionResult[] = $this->extractTranslations($file, $fileType);
-        }
+    private function unifyArraysKeys($extractionResult){
 
         $newArray = [];
         for($l=0; $l < count($extractionResult); $l++){
-            $x = 0;
+            $fileName = $extractionResult[$l]["willYaplaFileName"];
             foreach($extractionResult[$l] as $key => $value){
-                if($extractionResult[$x] && $l != $x){
+                $x = 0;
+                if($l != $x && $x<count($extractionResult)){
                     foreach($extractionResult[$x] as $key2 => $value2){
-                        if($key == $key2){
-                            dd($key, $key2, $value, $value2);
+                        // If array key is the same but the value is different, we change array key
+                        if($key !== "willYaplaFileName" && $key === $key2 && $value !== $value2){
+                            // New key will be the original key + the file name
+                            $newKey = $key2."_file_".$fileName;
+                            $extractionResult[$x][$newKey] = $extractionResult[$x][$key2];
+                            unset($extractionResult[$x][$key2]);
                         }
                     }
                 }
@@ -106,19 +107,11 @@ class FileController extends Controller
             }
         }
             
-
-
         $unique_array = call_user_func_array('array_merge', $extractionResult);
-
-        // That will flatten the array by exactly one level
-        //$unique_array = call_user_func_array('array_merge', array_unique($extractionResult, SORT_REGULAR));
-        
-        // foreach($extractionResult as $translationKey){
-        //      array_search(())
-        // }
-        
         
         ksort($unique_array);
+
+        unset($extractionResult[0]["willYaplaFileName"]);
         
         return $unique_array;
     }

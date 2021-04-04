@@ -33,7 +33,7 @@
                 <input type="file" name="filesToUpload[]" id="filesToUpload[]" class="form-control" multiple>
             </div>
             <div class="col-12">
-                <label class="form-label">Would you like to unify your translation keys when possible?</label>
+                <label class="form-label">Would you like to unify your translation keys when possible? If this option is selected, any duplicate keys with the same translation will be unified. Any duplicate keys with different translations will be maintained but with different key names.</label>
                 <input type="checkbox" name="unify" id="unify">
             </div>
             <div class="col-12">
