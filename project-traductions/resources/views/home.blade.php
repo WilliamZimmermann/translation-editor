@@ -26,7 +26,7 @@
                 <input type="text" name="originalLanguage" id="originalLanguage" class="form-control">
             </div>
             <div class="col-12">
-                <label class="form-label">Upload an File</label>
+                <label class="form-label">Upload one or more files</label>
                 <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
             </div>
             <div class="col-12">
@@ -34,6 +34,7 @@
             </div>
         </form>
         @if(session()->get('content'))
+            <label class="form-label">Unifed Extracted JSON File</label>
             <textarea name="fileExtractedStrings" class="form-control">{{ session()->get('content') }}</textarea>
         @endif
     </body>
