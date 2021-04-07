@@ -21,7 +21,7 @@ class FileController extends Controller
                 // We want that each node of translations has his own name/key. This key will be the original file name
                 $fileName = explode('.', $file->getClientOriginalName())[0];
                 $extractedTranslations = $this->extractTranslations($file, $request->input('fileType'));
-                $extractionResult[] = array_merge($extractedTranslations, ["willYaplaFileName"=>$fileName]);
+                $extractionResult[] = array_merge($extractedTranslations, ["TranslationFileName"=>$fileName]);
             }
             if($request->input('unify')){
                 $extractionResult = $this->unifyArraysKeys($extractionResult, );
@@ -89,13 +89,13 @@ class FileController extends Controller
 
         $newArray = [];
         for($l=0; $l < count($extractionResult); $l++){
-            $fileName = $extractionResult[$l]["willYaplaFileName"];
+            $fileName = $extractionResult[$l]["TranslationFileName"];
             foreach($extractionResult[$l] as $key => $value){
                 $x = 0;
                 if($l != $x && $x<count($extractionResult)){
                     foreach($extractionResult[$x] as $key2 => $value2){
                         // If array key is the same but the value is different, we change array key
-                        if($key !== "willYaplaFileName" && $key === $key2 && $value !== $value2){
+                        if($key !== "TranslationFileName" && $key === $key2 && $value !== $value2){
                             // New key will be the original key + the file name
                             $newKey = $key2."_file_".$fileName;
                             $extractionResult[$x][$newKey] = $extractionResult[$x][$key2];
@@ -111,7 +111,7 @@ class FileController extends Controller
         
         ksort($unique_array);
 
-        unset($unique_array["willYaplaFileName"]);
+        unset($unique_array["TranslationFileName"]);
         
         return $unique_array;
     }
